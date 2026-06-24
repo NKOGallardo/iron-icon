@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import type { Workout, Skill } from "./tracker-types";
-import { SKILLS } from "./tracker-types";
+import { SKILL_META } from "./tracker-types";
 
 const STORAGE_KEY = "calisthenics-tracker-v1";
 
@@ -234,9 +234,8 @@ export function downloadFile(name: string, content: string, mime: string) {
 
 export function skillTitle(workouts: Workout[], skill: Skill): string {
   const pr = personalRecord(workouts, skill);
-  // For holds, scale by seconds; for reps, scale by reps.
-  const tiers = [0, 5, 15, 30, 60];
-  const titles = SKILLS.includes(skill) ? require("./tracker-types").SKILL_META[skill].titles : [];
+  const tiers = skill === "Push-ups" ? [0, 20, 50, 100, 200] : [0, 5, 15, 30, 60];
+  const titles = SKILL_META[skill].titles;
   let idx = 0;
   for (let i = 0; i < tiers.length; i++) if (pr >= tiers[i]) idx = i;
   return titles[idx] ?? titles[0] ?? "";
