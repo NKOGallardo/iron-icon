@@ -41,7 +41,7 @@ export function ProgressCharts({ workouts }: { workouts: Workout[] }) {
                       fontSize: 12,
                     }}
                     labelStyle={{ color: "var(--color-muted-foreground)" }}
-                    formatter={(v: number) => [`${v}${meta.unit}`, "Best"]}
+                    formatter={(v) => [`${v}${meta.unit}`, "Best"]}
                   />
                   <Line type="monotone" dataKey="value" stroke={`url(#grad-${skill})`} strokeWidth={2.5} dot={{ r: 3, fill: color, strokeWidth: 0 }} activeDot={{ r: 5 }} />
                 </LineChart>
