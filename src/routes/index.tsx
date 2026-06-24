@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import {
@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster } from "@/components/ui/sonner";
-import { Download, FileJson, RotateCcw, Zap } from "lucide-react";
+import { Download, FileJson, Play, RotateCcw, Zap } from "lucide-react";
 import { Achievements } from "@/components/tracker/Achievements";
 import { ActivityFeed } from "@/components/tracker/ActivityFeed";
 import { AddWorkoutDialog } from "@/components/tracker/AddWorkoutDialog";
@@ -91,6 +91,22 @@ function Index() {
 
       <main className="space-y-6 md:space-y-8">
         <HeroStats workouts={workouts} />
+
+        <Link
+          to="/workout"
+          className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-card/60 p-4 hover:border-foreground/30 transition-colors"
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="grid place-items-center size-11 rounded-xl shrink-0" style={{ background: "var(--gradient-hero)" }}>
+              <Play className="size-5 text-background" />
+            </div>
+            <div className="min-w-0">
+              <div className="font-display font-bold text-base md:text-lg leading-tight">Start guided workout</div>
+              <div className="text-xs text-muted-foreground truncate">Day 1 Planche · Day 2 Handstand · Day 3 Push</div>
+            </div>
+          </div>
+          <span className="text-xs text-muted-foreground group-hover:text-foreground shrink-0">Open →</span>
+        </Link>
 
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="bg-card/60 border border-border h-auto p-1 rounded-2xl flex-wrap">
