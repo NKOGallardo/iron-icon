@@ -14,7 +14,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Toaster, toast } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
+
 import { ClipboardCopy, ClipboardPaste, Download, FileJson, Play, RotateCcw, Zap } from "lucide-react";
 import { Achievements } from "@/components/tracker/Achievements";
 import { ActivityFeed } from "@/components/tracker/ActivityFeed";
