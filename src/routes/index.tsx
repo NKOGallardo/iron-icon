@@ -15,7 +15,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toaster } from "@/components/ui/sonner";
-import { Download, FileJson, Play, RotateCcw, Zap } from "lucide-react";
+import { toast } from "sonner";
+
+import { ClipboardCopy, ClipboardPaste, Download, FileJson, Play, RotateCcw, Zap } from "lucide-react";
 import { Achievements } from "@/components/tracker/Achievements";
 import { ActivityFeed } from "@/components/tracker/ActivityFeed";
 import { AddWorkoutDialog } from "@/components/tracker/AddWorkoutDialog";
@@ -27,11 +29,13 @@ import { SKILLS } from "@/lib/tracker-types";
 import {
   downloadFile,
   exportCSV,
+  importWorkouts,
   levelFromXP,
   totalXP,
   useWorkouts,
 } from "@/lib/tracker-store";
 import { computeBadges } from "@/lib/tracker-badges";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -92,21 +96,62 @@ function Index() {
       <main className="space-y-6 md:space-y-8">
         <HeroStats workouts={workouts} />
 
-        <Link
-          to="/workout"
-          className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-card/60 p-4 hover:border-foreground/30 transition-colors"
-        >
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="grid place-items-center size-11 rounded-xl shrink-0" style={{ background: "var(--gradient-hero)" }}>
-              <Play className="size-5 text-background" />
+        <div className="flex items-stretch gap-2">
+          <Link
+            to="/workout"
+            className="group flex flex-1 items-center justify-between gap-3 rounded-2xl border border-border bg-card/60 p-4 hover:border-foreground/30 transition-colors"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="grid place-items-center size-11 rounded-xl shrink-0" style={{ background: "var(--gradient-hero)" }}>
+                <Play className="size-5 text-background" />
+              </div>
+              <div className="min-w-0">
+                <div className="font-display font-bold text-base md:text-lg leading-tight">Start guided workout</div>
+                <div className="text-xs text-muted-foreground truncate">Day 1 Planche · Day 2 Handstand · Day 3 Push</div>
+              </div>
             </div>
-            <div className="min-w-0">
-              <div className="font-display font-bold text-base md:text-lg leading-tight">Start guided workout</div>
-              <div className="text-xs text-muted-foreground truncate">Day 1 Planche · Day 2 Handstand · Day 3 Push</div>
-            </div>
+            <span className="text-xs text-muted-foreground group-hover:text-foreground shrink-0">Open →</span>
+          </Link>
+          <div className="flex flex-col gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl flex-1"
+              disabled={workouts.length === 0}
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(JSON.stringify(workouts, null, 2));
+                  toast.success("Workout data copied");
+                } catch {
+                  toast.error("Could not copy data");
+                }
+              }}
+            >
+              <ClipboardCopy className="size-4" /> Copy
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-xl flex-1"
+              onClick={async () => {
+                const input = window.prompt("Paste workout JSON data");
+                if (!input) return;
+                try {
+                  const parsed = JSON.parse(input);
+                  const arr = Array.isArray(parsed) ? parsed : parsed?.workouts;
+                  if (!Array.isArray(arr)) throw new Error("Invalid format");
+                  const added = importWorkouts(arr);
+                  toast.success(`Imported ${added} workouts`);
+                } catch {
+                  toast.error("Invalid data");
+                }
+              }}
+            >
+              <ClipboardPaste className="size-4" /> Paste
+            </Button>
           </div>
-          <span className="text-xs text-muted-foreground group-hover:text-foreground shrink-0">Open →</span>
-        </Link>
+        </div>
+
 
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="bg-card/60 border border-border h-auto p-1 rounded-2xl flex-wrap">

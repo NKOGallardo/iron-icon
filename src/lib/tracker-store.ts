@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import type { Workout, Skill } from "./tracker-types";
-import { SKILL_META } from "./tracker-types";
+import { SKILLS, SKILL_META } from "./tracker-types";
+
 
 const STORAGE_KEY = "calisthenics-tracker-v1";
 
@@ -67,6 +68,37 @@ export function useWorkouts() {
 
   return { workouts: items, add, update, remove, reset };
 }
+
+export function importWorkouts(rawItems: unknown[]): number {
+  const current = getAll();
+  const byId = new Map(current.map((w) => [w.id, w]));
+  let added = 0;
+  for (const item of rawItems) {
+    if (!item || typeof item !== "object") continue;
+    const w = item as Partial<Workout>;
+    if (!w.id || !w.skill || !w.type || typeof w.value !== "number" || !w.date) continue;
+    if (!SKILLS.includes(w.skill as Skill)) continue;
+    if (!["hold", "reps"].includes(w.type as string)) continue;
+    const full: Workout = {
+      id: String(w.id),
+      skill: w.skill as Skill,
+      type: w.type as "hold" | "reps",
+      value: Number(w.value),
+      date: String(w.date),
+      notes: w.notes ? String(w.notes) : undefined,
+      isNewPR: w.isNewPR === true,
+    };
+    if (!byId.has(full.id)) {
+      byId.set(full.id, full);
+      added++;
+    }
+  }
+  setAll(
+    Array.from(byId.values()).sort((a, b) => +new Date(b.date) - +new Date(a.date)),
+  );
+  return added;
+}
+
 
 // ----- Stats helpers -----
 
