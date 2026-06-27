@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Toaster } from "@/components/ui/sonner";
-import { Download, FileJson, Play, RotateCcw, Zap } from "lucide-react";
+import { Toaster, toast } from "@/components/ui/sonner";
+import { ClipboardCopy, ClipboardPaste, Download, FileJson, Play, RotateCcw, Zap } from "lucide-react";
 import { Achievements } from "@/components/tracker/Achievements";
 import { ActivityFeed } from "@/components/tracker/ActivityFeed";
 import { AddWorkoutDialog } from "@/components/tracker/AddWorkoutDialog";
@@ -27,11 +27,13 @@ import { SKILLS } from "@/lib/tracker-types";
 import {
   downloadFile,
   exportCSV,
+  importWorkouts,
   levelFromXP,
   totalXP,
   useWorkouts,
 } from "@/lib/tracker-store";
 import { computeBadges } from "@/lib/tracker-badges";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
