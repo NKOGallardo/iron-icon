@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import type { Workout, Skill } from "./tracker-types";
-import { SKILL_META } from "./tracker-types";
+import { SKILLS, SKILL_META } from "./tracker-types";
+
 
 const STORAGE_KEY = "calisthenics-tracker-v1";
 
